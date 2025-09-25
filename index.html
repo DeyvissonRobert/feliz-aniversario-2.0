@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gerador de Parabéns — Versão 2.0</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Animated gradient background */
+    .animated-gradient{
+      background: linear-gradient(120deg, #7C3AED, #FF007F, #FFD700, #00C853);
+      background-size: 300% 300%;
+      animation: gradient 12s ease infinite;
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Rainbow border button - parada e mais grossa */
+    .rainbow-btn{
+      position: relative;
+      z-index: 0;
+    }
+    .rainbow-btn::before{
+      content: "";
+      position: absolute;
+      inset: -6px; /* borda mais grossa */
+      border-radius: 9999px;
+      padding: 2px;
+      background: conic-gradient(from 90deg, #ff004c, #ff7a00, #ffd600, #00c853, #00b8ff, #7c3aed, #ff004c);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
+      filter: blur(6px);
+      opacity: 0.9;
+    }
+
+    .card-bg {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+      backdrop-filter: blur(6px);
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 9999px;
+      opacity: 0.12;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(20vh) scale(0.8); opacity: 0.12; }
+      to { transform: translateY(-10vh) scale(1.1); opacity: 0.02; }
+    }
+
+    #celebration-card img { object-fit: cover; }
+  </style>
+</head>
+<body class="min-h-screen animated-gradient">
+
+  <!-- Floating bubbles container -->
+  <div id="bubbles" class="pointer-events-none fixed inset-0 -z-10"></div>
+
+  <div id="app" class="min-h-screen flex items-center justify-center p-6">
+
+    <!-- Landing -->
+    <section id="page-landing" class="w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
+      <div class="flex-1 text-center md:text-left p-8">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">Quer desejar um feliz aniversário diferenciado para alguém que você ama?</h1>
+        <p class="mt-6 text-white/90">Crie um cartão personalizado, adicione foto, emoji, música e compartilhe o link instantaneamente.</p>
+        <div class="mt-8">
+          <button id="startBtn" class="rainbow-btn relative inline-block px-8 py-4 rounded-full bg-white text-black font-semibold shadow-lg">
+            Sim 🎉
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 p-6">
+        <div class="card-bg rounded-2xl shadow-2xl p-6 max-w-md mx-auto">
+          <div class="text-center">
+            <div id="miniPhoto" class="w-28 h-28 mx-auto rounded-full bg-gray-200 mb-4 overflow-hidden">
+              <img id="miniPhotoImg" src="" alt="" class="w-full h-full hidden"/>
+            </div>
+            <h3 id="miniName" class="text-xl font-bold text-gray-800">Feliz Aniversário, Nome!</h3>
+            <p id="miniPhrase" class="text-gray-600 mt-2">Frase destaque aparecerá aqui.</p>
+            <div id="miniEmoji" class="text-3xl mt-3">🎂</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section id="page-form" class="hidden w-full max-w-4xl mx-auto bg-transparent p-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="card-bg rounded-2xl p-6 shadow-xl">
+          <h2 class="text-2xl font-bold mb-4">Então preencha as informações da pessoa sortuda abaixo ✨</h2>
+
+          <form id="birthdayForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Nome <span class="text-red-500">*</span></label>
+              <input name="name" id="name" class="w-full p-3 border rounded-lg" required />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1">Data de nascimento</label>
+                <input type="date" name="dob" id="dob" class="w-full p-3 border rounded-lg" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1">Ou: Quantos anos completa</label>
+                <input type="number" min="0" name="age" id="age" class="w-full p-3 border rounded-lg" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-1">Frase destaque</label>
+              <input name="phrase" id="phrase" class="w-full p-3 border rounded-lg" placeholder="Ex.: Você é incrível!" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-1">Cartinha curta (opcional)</label>
+              <textarea id="letter" rows="3" class="w-full p-3 border rounded-lg" placeholder="Escreva uma cartinha..." ></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1">Emoji favorito (opcional)</label>
+                <input name="emoji" id="emoji" class="w-full p-3 border rounded-lg" placeholder="Ex.: 🎮" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-1">Upload de foto (opcional)</label>
+                <input id="photo" type="file" accept="image/*" class="w-full" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Tema de cores (escolha 1)</label>
+              <div id="themes" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+            </div>
+
+            <div class="flex gap-3 mt-4">
+              <button type="submit" id="generateBtn" class="px-5 py-3 bg-purple-600 text-white rounded-lg shadow">Gerar meu parabéns 🎂</button>
+              <button type="button" id="backToLanding" class="px-5 py-3 bg-white/70 text-black rounded-lg shadow">Voltar</button>
+              <!-- botão play/pause música -->
+              <button type="button" id="toggleMusic" class="px-5 py-3 bg-pink-600 text-white rounded-lg shadow">🔊 Pausar Música</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section id="page-result" class="hidden w-full max-w-3xl mx-auto p-6">
+      <div class="card-bg rounded-2xl shadow-2xl p-6 text-center">
+        <div id="celebration-card" class="p-6">
+          <div id="resultPhotoWrapper" class="w-40 h-40 mx-auto rounded-full overflow-hidden bg-gray-200 mb-4">
+            <img id="resultPhoto" src="" alt="" class="w-full h-full hidden"/>
+          </div>
+
+          <h1 id="resultTitle" class="text-3xl font-extrabold text-gray-800 mb-2">Feliz Aniversário!</h1>
+          <h2 id="resultName" class="text-2xl font-bold text-gray-700 mb-2"></h2>
+          <p id="resultAge" class="text-gray-600 mb-2"></p>
+          <p id="resultPhrase" class="text-xl font-semibold mb-4"></p>
+          <p id="resultLetter" class="text-gray-700 italic mb-4"></p>
+        </div>
+      </div>
+
+      <!-- botões fora do card -->
+      <div class="mt-6 text-center space-y-4">
+        <p class="text-white font-semibold">Envie via WhatsApp, mande em PNG ou Copie o link para enviar em outra rede social!</p>
+        <div class="flex items-center justify-center gap-4">
+          <button id="shareWhats" class="px-4 py-2 rounded-lg bg-green-500 text-white">WhatsApp</button>
+          <button id="downloadPNG" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Salvar PNG</button>
+          <button id="copyLink" class="px-4 py-2 rounded-lg bg-gray-800 text-white">Copiar link</button>
+        </div>
+        <div>
+          <button id="backToForm" class="px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg shadow-md">✏️ Editar</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
