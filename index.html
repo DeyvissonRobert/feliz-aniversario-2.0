@@ -16,7 +16,7 @@
   <style>
     /* Animated gradient background */
     .animated-gradient{
-      background: linear-gradient(120deg, #7C3AED, #FF007F, #FFD700, #00C853);
+      background: linear-gradient(120deg, #7C3AED, #FF007F, #FFD700, #00b8ff, #00C853);
       background-size: 300% 300%;
       animation: gradient 12s ease infinite;
     }
@@ -34,16 +34,15 @@
     .rainbow-btn::before{
       content: "";
       position: absolute;
-      inset: -6px; /* borda mais grossa */
+      inset: -6px; 
       border-radius: 9999px;
-      padding: 2px;
+      padding: 10px;
       background: conic-gradient(from 90deg, #ff004c, #ff7a00, #ffd600, #00c853, #00b8ff, #7c3aed, #ff004c);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       z-index: -1;
       filter: blur(6px);
-      opacity: 0.9;
     }
 
     .card-bg {
@@ -51,24 +50,14 @@
       backdrop-filter: blur(6px);
     }
 
-    .bubble {
-      position: absolute;
-      border-radius: 9999px;
-      opacity: 0.12;
-      animation: floatUp linear infinite;
-    }
-    @keyframes floatUp {
-      from { transform: translateY(20vh) scale(0.8); opacity: 0.12; }
-      to { transform: translateY(-10vh) scale(1.1); opacity: 0.02; }
-    }
 
     #celebration-card img { object-fit: cover; }
   </style>
+
+<script src="./script.js" defer></script>
 </head>
 <body class="min-h-screen animated-gradient">
 
-  <!-- Floating bubbles container -->
-  <div id="bubbles" class="pointer-events-none fixed inset-0 -z-10"></div>
 
   <div id="app" class="min-h-screen flex items-center justify-center p-6">
 
@@ -76,7 +65,7 @@
     <section id="page-landing" class="w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
       <div class="flex-1 text-center md:text-left p-8">
         <h1 class="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">Quer desejar um feliz aniversário diferenciado para alguém que você ama?</h1>
-        <p class="mt-6 text-white/90">Crie um cartão personalizado, adicione foto, emoji, música e compartilhe o link instantaneamente.</p>
+        <p class="mt-6 text-white/90">Crie um cartão personalizado, adicione foto, emoji, música e compartilhe a foto instantaneamente.</p>
         <div class="mt-8">
           <button id="startBtn" class="rainbow-btn relative inline-block px-8 py-4 rounded-full bg-white text-black font-semibold shadow-lg">
             Sim 🎉
@@ -98,11 +87,12 @@
       </div>
     </section>
 
+
     <!-- Form -->
     <section id="page-form" class="hidden w-full max-w-4xl mx-auto bg-transparent p-6">
       <div class="max-w-3xl mx-auto">
         <div class="card-bg rounded-2xl p-6 shadow-xl">
-          <h2 class="text-2xl font-bold mb-4">Então preencha as informações da pessoa sortuda abaixo ✨</h2>
+          <h2 class="text-2xl font-bold mb-4">Então preencha as informações dessa pessoa sortuda abaixo ✨</h2>
 
           <form id="birthdayForm" class="space-y-4">
             <div>
@@ -148,17 +138,19 @@
               <div id="themes" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
             </div>
 
-            <div class="flex gap-3 mt-4">
-              <button type="submit" id="generateBtn" class="px-5 py-3 bg-purple-600 text-white rounded-lg shadow">Gerar meu parabéns 🎂</button>
-              <button type="button" id="backToLanding" class="px-5 py-3 bg-white/70 text-black rounded-lg shadow">Voltar</button>
+            <div class="flex flex-wrap gap-3 mt-4">
+              <button type="submit" id="generateBtn" class="px-5 py-3 bg-purple-600 text-white rounded-lg shadow w-full sm:w-auto">Gerar meu parabéns 🎂</button>
+              <button type="button" id="backToLanding" class="px-5 py-3 bg-white/70 text-black rounded-lg shadow w-full sm:w-auto">Voltar</button>
               <!-- botão play/pause música -->
-              <button type="button" id="toggleMusic" class="px-5 py-3 bg-pink-600 text-white rounded-lg shadow">🔊 Pausar Música</button>
+              <button type="button" id="toggleMusic" class="px-5 py-3 bg-pink-600 text-white rounded-lg shadow w-full sm:w-auto">🔊 Pausar Música</button>
             </div>
+
           </form>
 
         </div>
       </div>
     </section>
+
 
     <!-- Result -->
     <section id="page-result" class="hidden w-full max-w-3xl mx-auto p-6">
@@ -178,7 +170,7 @@
 
       <!-- botões fora do card -->
       <div class="mt-6 text-center space-y-4">
-        <p class="text-white font-semibold">Envie via WhatsApp, mande em PNG ou Copie o link para enviar em outra rede social!</p>
+        <p class="text-white font-semibold">Salve em PNG e envie via WhatsApp ou Copie o link para compartilhar em outra rede social!</p>
         <div class="flex items-center justify-center gap-4">
           <button id="shareWhats" class="px-4 py-2 rounded-lg bg-green-500 text-white">WhatsApp</button>
           <button id="downloadPNG" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Salvar PNG</button>
@@ -189,9 +181,35 @@
         </div>
       </div>
     </section>
-
   </div>
+  
+  <!-- Footer -->
+<footer class="mt-12 bg-gray-900 text-center text-gray-300 py-6">
+  <p class="text-sm">
+    © 2025 <span class="text-red-500 font-bold">Deyvisson Robert Santos</span> — Todos os direitos reservados.
+  </p>
+  <div class="mt-3 flex justify-center gap-3">
+    <a href="https://www.linkedin.com/in/deyvisson-robert-santos/" target="_blank"
+       class="flex items-center gap-2 text-red-400 hover:text-red-500 transition">
+      <!-- Ícone LinkedIn -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" 
+           class="w-6 h-6">
+        <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 
+        2.76 2.24 5 5 5h14c2.76 0 5-2.24 
+        5-5v-14c0-2.76-2.24-5-5-5zm-11 
+        19h-3v-10h3v10zm-1.5-11.27c-.97 
+        0-1.75-.79-1.75-1.76s.78-1.75 
+        1.75-1.75 1.75.78 
+        1.75 1.75-.78 1.76-1.75 
+        1.76zm13.5 11.27h-3v-5.6c0-1.34-.03-3.07-1.87-3.07-1.87 
+        0-2.16 1.46-2.16 2.96v5.7h-3v-10h2.88v1.36h.04c.4-.75 
+        1.38-1.54 2.85-1.54 3.05 0 3.62 
+        2.01 3.62 4.62v5.56z"/>
+      </svg>
+      <span class="text-sm">Meu LinkedIn</span>
+    </a>
+  </div>
+</footer>
 
-  <script src="./script.js"></script>
 </body>
 </html>

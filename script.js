@@ -42,13 +42,14 @@
 
   // temas (restaurados: 7)
   const THEMES = {
-    candy:  { name: 'Candy Party', bg: 'linear-gradient(120deg,#FFD1E8,#CDB4DB,#FFF1A8)', textDark: true },
+    disco:  { name: 'Retro Disco', bg: 'linear-gradient(120deg,#7C3AED,#FF007F,#FFD700)', textDark: false },
     neon:   { name: 'Neon Night', bg: 'linear-gradient(120deg,#0F172A,#00F5FF,#A78BFA)', textDark: false },
     tropical:{ name: 'Tropical Vibes', bg: 'linear-gradient(120deg,#FF8A00,#00C853,#FFD600)', textDark: true },
     ocean:  { name: 'Ocean Breeze', bg: 'linear-gradient(120deg,#BEE3F8,#2DD4BF,#FFFFFF)', textDark: true },
-    disco:  { name: 'Retro Disco', bg: 'linear-gradient(120deg,#7C3AED,#FF007F,#FFD700)', textDark: false },
-    redblack:{ name: 'Red & Black', bg: 'linear-gradient(120deg,#E53935,#0B0F14,#6B7280)', textDark: false },
-    pro:    { name: 'Professional', bg: 'linear-gradient(120deg,#0B3D91,#475569,#F8FAFC)', textDark: true }
+    candy:  { name: 'Candy Party', bg: 'linear-gradient(135deg,#ff9a9e,#fecfef,#fe99ff)', textDark: true },
+    redblack:{ name: 'Red & Black', bg: 'linear-gradient(135deg, #000000ff, #d42222ff, #ec0000ff,#1c1c1c)', textDark: false },
+    pro:    { name: 'Profissional', bg: 'linear-gradient(135deg,#1c92d2,#2DD4BF,#f2fcfe)', textDark: true },
+    kids: { name: 'Infantil', bg: 'linear-gradient(135deg,#ffdde1,#ee9ca7,#a1c4fd,#c2e9fb)', textDark: true}
   };
 
   const themeKeys = Object.keys(THEMES);
@@ -59,12 +60,23 @@
       const t = THEMES[key];
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'flex items-center gap-2 p-2 border rounded-lg text-sm bg-white/60';
+      btn.className = 'flex flex-col items-center justify-center p-3 border rounded-lg text-sm bg-white/60 min-w-0 w-full sm:w-auto text-center';
       btn.dataset.key = key;
-      // mostra 3 mini bolinhas de cor (pequena pista do tema)
-      const swatches = t.bg.match(/#[0-9A-Fa-f]{3,6}/g) || [];
-      const swHtml = swatches.slice(0,3).map(c => `<span class="w-4 h-4 rounded-full" style="background:${c}"></span>`).join('');
-      btn.innerHTML = `<div class="flex items-center gap-2">${swHtml}<span class="text-xs">${t.name}</span></div>`;
+      // pega até 3 cores do gradiente ou gera fallback
+let swatches = t.bg.match(/#[0-9A-Fa-f]{3,6}/g) || [];
+if(swatches.length < 3){
+  while(swatches.length < 3){
+    swatches.push(swatches[swatches.length-1] || '#ccc');
+  }
+}
+const swHtml = swatches.slice(0,3).map(c => `<span class="w-4 h-4 rounded-full" style="background:${c}"></span>`).join('');
+
+      btn.innerHTML = `
+        <div class="flex gap-1 justify-center mb-2">
+          ${swHtml}
+        </div>
+        <span class="text-xs font-medium">${t.name}</span>
+      `;
       btn.onclick = () => {
         qsa('#themes button').forEach(b => {
           b.classList.remove('ring-4','ring-indigo-300','bg-indigo-100');
@@ -82,25 +94,7 @@
     });
   })();
 
-  // cria efeito bolhas decorativas (como antes)
-  (function createBubbles(){
-    const container = qs('#bubbles');
-    if(!container) return;
-    const count = 9;
-    for(let i=0;i<count;i++){
-      const el = document.createElement('div');
-      const size = 60 + Math.floor(Math.random()*120);
-      el.className = 'bubble';
-      el.style.width = size + 'px';
-      el.style.height = size + 'px';
-      el.style.left = (Math.floor(Math.random()*100)) + '%';
-      el.style.bottom = (-Math.floor(Math.random()*40)) + 'vh';
-      el.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7), rgba(255,255,255,0.05))`;
-      el.style.animationDuration = (15 + Math.floor(Math.random()*10)) + 's';
-      el.style.transform = `translateY(${10 + Math.floor(Math.random()*40)}vh)`;
-      container.appendChild(el);
-    }
-  })();
+  
 
   // áudio
   let audio;
@@ -248,7 +242,7 @@
   if(shareWhats){
     shareWhats.addEventListener('click', () => {
       const url = currentResultUrl();
-      const text = encodeURIComponent(`🎉 Parabéns! Veja essa surpresa: ${url}`);
+      const text = encodeURIComponent(`🎉 Parabéns! Faça sua surpresa aqui também: ${url}`);
       window.open(`https://wa.me/?text=${text}`, '_blank');
     });
   }
