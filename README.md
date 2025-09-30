@@ -1,4 +1,4 @@
-# Amigo Secreto
+# Feliz Aniversário 2.0
 Um projeto divertido e interativo para gerar mensagens de **feliz aniversário personalizadas**, com opções de foto, frase destaque, cartinha, emoji favorito e temas coloridos.  
 O usuário pode salvar em PNG, copiar o link ou compartilhar diretamente no WhatsApp.🧁
 ## 🔗 Link para o Deploy: 
