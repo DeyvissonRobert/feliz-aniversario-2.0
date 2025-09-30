@@ -14,8 +14,9 @@ O usuário pode salvar em PNG, copiar o link ou compartilhar diretamente no What
 - 🎵 Música de fundo com botão de play/pause
 - 🎨 8 temas com pré-visualização
 - 🥳 Animações festivas
-- 📤 Download em PNG e compartilhamento por WhatsApp ou copiando link 
-
+- 📤 Compartilhar no WhatsApp, salvar em PNG ou copiar link
+- ✍🏾 Editar facilmente as informações
+- 📲 Totalmente responsivo (desktop e mobile).
 
 ## Tecnologias Utilizadas
 - **HTML5**  
