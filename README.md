@@ -21,8 +21,10 @@ O usuário pode salvar em PNG, copiar o link ou compartilhar diretamente no What
 ## Tecnologias Utilizadas
 - **HTML5**  
 - **TailwindCSS** (via CDN)  
-- **JavaScript** (ES6)
-- **OpenAi**
+- **JavaScript** 
+- **OpenAi** (Auxiliar no desenvolvimento)
+- **html2canvas** (Capturar o cartão e salvar em PNG)
+- **Canvas Confetti** (Animação de confete)
 
 
 🧁 Divirta-se criando parabéns personalizados! 🎂🥳
