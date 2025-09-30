@@ -2,8 +2,6 @@
 (() => {
   const qs = (sel) => document.querySelector(sel);
   const qsa = (sel) => Array.from(document.querySelectorAll(sel));
-  const encodeData = (obj) => btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
-  const decodeData = (s) => JSON.parse(decodeURIComponent(escape(atob(s))));
 
   // páginas
   const pageLanding = qs('#page-landing');
@@ -239,13 +237,48 @@ const swHtml = swatches.slice(0,3).map(c => `<span class="w-4 h-4 rounded-full" 
     return location.href;
   }
 
-  if(shareWhats){
-    shareWhats.addEventListener('click', () => {
-      const url = currentResultUrl();
-      const text = encodeURIComponent(`🎉 Parabéns! Faça sua surpresa aqui também: ${url}`);
-      window.open(`https://wa.me/?text=${text}`, '_blank');
-    });
-  }
+if(shareWhats){
+  shareWhats.addEventListener('click', async () => {
+    const el = celebrationCard || qs('#celebration-card');
+    if(!el) return;
+
+    // gera canvas do card
+    const canvas = await html2canvas(el, { scale: 2 });
+    const dataUrl = canvas.toDataURL("image/png");
+
+    // converte para Blob (necessário pro Web Share API)
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const file = new File([blob], "parabens.png", { type: "image/png" });
+
+    const text = `🎉 Olha esse parabéns especial que criei!`;
+
+    // tenta usar Web Share API (mobile / navegadores compatíveis)
+    if(navigator.canShare && navigator.canShare({ files: [file] })){
+      try {
+        await navigator.share({
+          text,
+          files: [file]
+        });
+      } catch(err){
+        console.log("Compartilhamento cancelado ou não suportado", err);
+      }
+    } else {
+      // fallback: abre WhatsApp com texto + baixa a imagem
+      const waText = encodeURIComponent(text + "\n\n" + currentResultUrl());
+      window.open(`https://wa.me/?text=${waText}`, "_blank");
+
+      // baixa automaticamente a imagem também
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "parabens.png";
+      a.click();
+
+      alert("Baixamos a imagem do parabéns. Agora é só anexar no WhatsApp! 📱");
+    }
+  });
+}
+
 
   if(copyLinkBtn){
     copyLinkBtn.addEventListener('click', async () => {
