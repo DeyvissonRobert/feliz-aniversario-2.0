@@ -2,7 +2,7 @@
 Um projeto divertido e interativo para gerar mensagens de **feliz aniversário personalizadas**, com opções de foto, frase destaque, cartinha, emoji favorito e temas coloridos.  
 O usuário pode salvar em PNG, copiar o link ou compartilhar diretamente no WhatsApp.🧁
 ## 🔗 Link para o Deploy: 
-* Veja a versão ao vivo do projeto aqui:<a href="https://drs-meu-presente-22anos.netlify.app/"> DRS Gerador de Parabéns 2.0 </a>
+* Veja a versão ao vivo do projeto aqui:<a href="https://drs-parabens-22y.netlify.app/"> DRS Gerador de Parabéns 2.0 </a>
 
 ![tela DRS Gerador de Parabéns](https://raw.githubusercontent.com/DeyvissonRobert/challenge-amigo-secreto/refs/heads/main/assets/Mockup%20Amigo%20Secreto.png)
 
@@ -14,14 +14,17 @@ O usuário pode salvar em PNG, copiar o link ou compartilhar diretamente no What
 - 🎵 Música de fundo com botão de play/pause
 - 🎨 8 temas com pré-visualização
 - 🥳 Animações festivas
-- 📤 Download em PNG e compartilhamento por WhatsApp ou copiando link 
-
+- 📤 Compartilhar no WhatsApp, salvar em PNG ou copiar link
+- ✍🏾 Editar facilmente as informações
+- 📲 Totalmente responsivo (desktop e mobile).
 
 ## Tecnologias Utilizadas
 - **HTML5**  
 - **TailwindCSS** (via CDN)  
-- **JavaScript** (ES6)
-- **OpenAi**
+- **JavaScript** 
+- **OpenAi** (Auxiliar no desenvolvimento)
+- **html2canvas** (Capturar o cartão e salvar em PNG)
+- **Canvas Confetti** (Animação de confete)
 
 
 🧁 Divirta-se criando parabéns personalizados! 🎂🥳
